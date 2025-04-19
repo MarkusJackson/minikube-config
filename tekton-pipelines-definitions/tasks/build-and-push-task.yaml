@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-and-push-task
+  namespace: tekton
+spec:
+  params:
+    - name: image
+      type: string
+      description: The target image name (e.g., docker.io/<username>/<microservice>:latest)
+    - name: context-path
+      type: string
+      description: The path to the project directory within the workspace
+      default: .
+    - name: dockerfile-path
+      type: string
+      description: The path to the Dockerfile relative to the context path
+      default: Dockerfile
+  workspaces:
+    - name: source
+      description: The workspace containing the source code
+  steps:
+    - name: build
+      image: maven:3.8-openjdk-11
+      workingDir: /workspace/source/$(params.context-path)
+      script: |
+        mvn clean package
+    - name: build-and-push-image
+      image: gcr.io/kaniko-project/executor:latest
+      args:
+        - "--context=/workspace/source/$(params.context-path)"
+        - "--dockerfile=/workspace/source/$(params.context-path)/$(params.dockerfile-path)"
+        - "--destination=$(params.image)"
+        - "--cache=true"
+      securityContext:
+        runAsUser: 0
