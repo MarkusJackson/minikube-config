@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/markusjackson/hello-world-microservice
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  host: hello-world.local
+  path: /
+  pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
