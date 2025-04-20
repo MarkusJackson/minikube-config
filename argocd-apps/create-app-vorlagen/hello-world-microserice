@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-world-microservice
+spec:
+  destination:
+    namespace: microservices
+    server: https://kubernetes.default.svc
+  source:
+    path: helm-charts/microservices/hello-word-microservice
+    repoURL: https://github.com/MarkusJackson/minikube-config.git
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
