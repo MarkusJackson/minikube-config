@@ -1,5 +1,0 @@
-apiVersion: v2
-name: hello-world-microservice
-description: A Helm chart for deploying the hello-world-microservice in Kubernetes
-version: 0.1.0
-appVersion: "1.0.0"
